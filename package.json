@@ -29,7 +29,7 @@
   "bin": {},
   "scripts": {
     "debug": "webpack-dev-server",
-    "start": "NODE_ENV=development webpack-dev-server",
-    "prod": "NODE_ENV=production rm -rf docs && webpack -p && cp -rf src/assets docs && cp src/index.html docs && cp src/favicon.ico docs"
+    "start": "webpack-dev-server",
+    "prod": "rm -rf docs && NODE_ENV=production webpack -p && cp -rf src/assets docs && cp src/index.html docs && cp src/favicon.ico docs"
   }
 }
