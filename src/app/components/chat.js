@@ -2,10 +2,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 export class Chat extends React.Component {
-  constructor () {
+  constructor() {
     super()
+    console.log(process.env.NODE_ENV)
     this.state = {
-      socket: new window.WebSocket('ws://vhost3.lnu.se:20080/socket/'),
+      socket: new window.WebSocket((process.env.NODE_ENV === 'production' ? 'wss' : 'ws') + '://vhost3.lnu.se:20080/socket/'),
       username: window.localStorage.getItem('chat') === null ? '' : JSON.parse(window.localStorage.getItem('chat')).username,
       channel: window.localStorage.getItem('chat') === null ? '' : JSON.parse(window.localStorage.getItem('chat')).channel,
       isMainView: window.localStorage.getItem('chat') !== null,
@@ -15,12 +16,12 @@ export class Chat extends React.Component {
     this.ping()
   }
 
-  close () {
+  close() {
     this.state.socket.close()
     document.querySelector('#' + this.props.id).remove()
   }
 
-  connect () {
+  connect() {
     return new Promise((resolve, reject) => {
       this.state.socket.onopen = () => resolve(this.state.socket)
       this.state.socket.onerror = () => reject(this.state.socket)
@@ -28,13 +29,13 @@ export class Chat extends React.Component {
     })
   }
 
-  ping () {
+  ping() {
     this.connect()
       .then(socket => this.setState({ socket: socket }))
       .catch(() => this.showError())
   }
 
-  sendMessage (event) {
+  sendMessage(event) {
     if (event.key === 'Enter') {
       this.state.socket.send(JSON.stringify({
         type: 'message',
@@ -48,19 +49,19 @@ export class Chat extends React.Component {
     }
   }
 
-  timeStamp (stamp) {
+  timeStamp(stamp) {
     return stamp.toDateString().split(' ')[2] + ' ' + stamp.toDateString().split(' ')[1] + ' at ' + stamp.toTimeString().substring(0, 5)
   }
 
-  handleUsername (event) { this.setState({ username: ('' + event.target.value).trim() }) }
+  handleUsername(event) { this.setState({ username: ('' + event.target.value).trim() }) }
 
-  handleChannel (event) { this.setState({ channel: ('' + event.target.value).trim() }) }
+  handleChannel(event) { this.setState({ channel: ('' + event.target.value).trim() }) }
 
-  showSettings () { this.setState({ isMainView: false }) }
+  showSettings() { this.setState({ isMainView: false }) }
 
-  showError () { this.setState({ isError: true }) }
+  showError() { this.setState({ isError: true }) }
 
-  showMainView () {
+  showMainView() {
     this.setState({ isMainView: this.state.username.length > 0 && this.state.channel.length > 0 })
     if (this.state.username.length > 0 && this.state.channel.length > 0) {
       window.localStorage.setItem('chat', JSON.stringify({
@@ -70,7 +71,7 @@ export class Chat extends React.Component {
     }
   }
 
-  render () {
+  render() {
     return (
       <div id={this.props.id} draggable='true' onDragOver={this.props.dragOver} onDragStart={this.props.dragStart} className='ui card'>
         <div id='header' className='content'>
@@ -85,7 +86,7 @@ export class Chat extends React.Component {
     )
   }
 
-  addMessage (response) {
+  addMessage(response) {
     if (response.type !== 'heartbeat') {
       let arr = this.state.messages
       arr.push(
@@ -99,12 +100,12 @@ export class Chat extends React.Component {
           </div>
         </div>
       )
-      this.setState({messages: arr})
+      this.setState({ messages: arr })
       if (this.state.username !== '') { document.querySelector('audio').play() }
     }
   }
 
-  error () {
+  error() {
     return (
       <div className='ui extra content'>
         <div className='ui icon message'>
@@ -114,7 +115,7 @@ export class Chat extends React.Component {
     )
   }
 
-  messages () {
+  messages() {
     return (
       <div>
         <div className='ui comments chat-content-area'>
@@ -129,7 +130,7 @@ export class Chat extends React.Component {
     )
   }
 
-  settings () {
+  settings() {
     return (
       <div>
         <div className='ui fluid icon input'>
