@@ -5,7 +5,7 @@ export default {
   entry: path.join(__dirname, 'src/app/app.js'),
   output: {
     filename: 'build.js',
-    path: path.join(__dirname, 'dist')
+    path: path.join(__dirname, 'docs')
   },
   module: {
     rules: [
