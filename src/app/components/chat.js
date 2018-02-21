@@ -4,9 +4,8 @@ import PropTypes from 'prop-types'
 export class Chat extends React.Component {
   constructor() {
     super()
-    console.log(process.env.NODE_ENV)
     this.state = {
-      socket: new window.WebSocket((process.env.NODE_ENV === 'production' ? 'wss' : 'ws') + '://vhost3.lnu.se:20080/socket/'),
+      socket: new window.WebSocket('ws://vhost3.lnu.se:20080/socket/'),
       username: window.localStorage.getItem('chat') === null ? '' : JSON.parse(window.localStorage.getItem('chat')).username,
       channel: window.localStorage.getItem('chat') === null ? '' : JSON.parse(window.localStorage.getItem('chat')).channel,
       isMainView: window.localStorage.getItem('chat') !== null,
@@ -42,7 +41,7 @@ export class Chat extends React.Component {
         data: event.target.value,
         username: this.state.username,
         channel: this.state.channel,
-        key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
+        key: process.env.API
       }))
       event.target.value = ''
       event.preventDefault()

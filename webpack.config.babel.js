@@ -1,11 +1,13 @@
 import webpack from 'webpack'
 import path from 'path'
+import Dotenv from 'dotenv-webpack'
+
 
 export default {
   entry: path.join(__dirname, 'src/app/app.js'),
   output: {
-    filename: 'build.js',
-    path: path.join(__dirname, 'docs')
+    filename: 'pwd.js',
+    path: path.join(__dirname, 'dist')
   },
   module: {
     rules: [
@@ -35,6 +37,10 @@ export default {
       'process.env': {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')
       }
-    })
-  ],
+    }),
+    new Dotenv({
+      path: './.env',
+      safe: false
+    }),
+  ]
 }
